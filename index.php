@@ -1,5 +1,28 @@
 <?php
-include('vendor/autoload.php');
+namespace App\index;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+
+use App\BudgetHelper;
+
+$data = <<<TEXT
+11.11
+Продукты 10 157 13
+Хозтовары 145
+
+12.11
+Работа 50 48
+TEXT;
+
+$strings = explode("\n", trim($data, $characters = " \n\r\t\v\0"));
+$result = BudgetHelper::clearArray($strings, false);
+
+BudgetHelper::composeText($result);
+
+
+
+/* include('vendor/autoload.php');
 use Telegram\Bot\Api;
 
 function handler($event, $context)
@@ -75,4 +98,4 @@ function prepareData(array $data)
     );
 
     return implode("\n\n", $byDaysGrouped);
-}
+}*/
