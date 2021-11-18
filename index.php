@@ -5,11 +5,11 @@ use App\Utils;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-
 use App\BudgetHelper;
 
-$data = <<<TEXT
-17.11
+
+$text = <<<TEXT
+17,11
 Стрижка 300
 Одежда 2000
 Продукты 59
@@ -22,10 +22,12 @@ $data = <<<TEXT
 Заработок 1000
 TEXT;
 
-$strings = explode("\n", trim($data, $characters = " \n\r\t\v\0"));
-$ast = BudgetHelper::buildAST($strings);
+$data = explode("\n", trim($text, $characters = " \n\r\t\v\0"));
 
-echo BudgetHelper::createText($ast);
+$helper = new BudgetHelper($data);
+$message = $helper->createText();
+
+echo $message;
 
 
 /* include('vendor/autoload.php');

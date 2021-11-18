@@ -3,16 +3,16 @@ namespace App;
 
 class Utils
 {
-    private $_data = [];
+    private $_data;
 
     public function __construct(array $data)
     {
         $this->_data = collect($data);
     }
 
-    public function replaceCommasToChar(string $character = ',')
+    public function replaceCommasToChar(string $character = '.')
     {
-        $result = $this->_data->map(fn ($item) => str_replace($character, '.', $item));
+        $result = $this->_data->map(fn ($item) => str_replace(',', $character, $item));
 
         return new Utils($result->all());
     }

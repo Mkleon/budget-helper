@@ -5,9 +5,18 @@ use App\Utils;
 
 class BudgetHelper
 {
-    public static function buildAST(array $data): array
+    private $_data = [];
+    private $_ast = [];
+
+    public function __construct(array $data)
     {
-        $collection = collect($data);
+        $this->_data = $data;
+        $this->_ast = $this->buildAST();
+    }
+
+    private function buildAST(): array
+    {
+        $collection = collect($this->_data);
         $byDays = $collection
             ->chunkWhile(fn ($value) => !empty($value))
             ->map(
@@ -49,9 +58,9 @@ class BudgetHelper
         return $byDays->all();
     }
 
-    public static function createText(array $ast): string
+    public function createText(): string
     {
-        $collection = collect($ast);
+        $collection = collect($this->_ast);
         $result = $collection
             ->map(
                 function ($item) {
