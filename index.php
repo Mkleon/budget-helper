@@ -17,9 +17,9 @@ TEXT;
 
 $strings = explode("\n", trim($data, $characters = " \n\r\t\v\0"));
 $result = BudgetHelper::clearArray($strings, false);
+$ast = BudgetHelper::composeAST($result);
 
-BudgetHelper::composeText($result);
-
+echo BudgetHelper::createText($ast);
 
 
 /* include('vendor/autoload.php');

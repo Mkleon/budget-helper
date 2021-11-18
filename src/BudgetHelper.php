@@ -1,8 +1,6 @@
 <?php
 namespace App;
 
-//use Tightenco\Collect\Support\Collection;
-
 class BudgetHelper
 {
     public static function clearArray(array $data, bool $deleteEmptyItems = true): array
@@ -20,7 +18,7 @@ class BudgetHelper
         return $result;
     }
 
-    public static function composeText(array $data)
+    public static function composeAST(array $data)
     {
         $collection = collect($data);
         $byDays = $collection
@@ -40,7 +38,7 @@ class BudgetHelper
     
                             return [
                                 'category' => $category,
-                                'sum' => array_sum($numbers->all())
+                                'sum' => $numbers->sum()
                             ];
                         }
                     );
@@ -52,35 +50,24 @@ class BudgetHelper
                 }
             );
         
-        
-        print_r($byDays->toArray());
-        
-        /* $byDaysRaw = explode('_', implode("\n", $data));
-
-        $byDaysGrouped = array_map(
-            function ($str) {
-                $arr = self::clearArray(explode("\n", $str));
-                $date = $arr[0];
-                $tail = array_slice($arr, 1);
-
-                $byCategories = array_map(
-                    function ($item) {
-                        $line = explode(' ', $item);
-                        $category = $line[0];
-                        $sum = array_sum(array_slice($line, 1));
-
-                        return "{$category} {$sum}";
-                    },
-                    $tail
-                );
-
-                $body = implode("\n", $byCategories);
-                return "{$date}\n{$body}";
-            },
-            $byDaysRaw
-        );
-
-        echo implode("\n\n", $byDaysGrouped); */
+        return $byDays->all();
     }
 
+    public static function createText(array $ast)
+    {
+        $collection = collect($ast);
+        $result = $collection
+            ->map(
+                function ($item) {
+                    $data = collect($item["data"])
+                        ->map(fn ($item) => "{$item['category']} {$item['sum']}")
+                        ->implode("\n");
+
+                    return "{$item['day']}\n{$data}";
+                }
+            );
+        
+        
+        return $result->implode("\n\n");
+    }
 }
