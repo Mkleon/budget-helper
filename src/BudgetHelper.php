@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Utils;
+use App\Categories;
 
 class BudgetHelper
 {
@@ -38,11 +39,13 @@ class BudgetHelper
                     $byCategories = $tail->map(
                         function ($line) {
                             $items = collect(explode(' ', $line));
-                            $category = $items->first();
+
+                            $currentCategory = $items->first();
+                            $refCategory = collect(Categories::findKeysByValue($currentCategory))->first() ?? $currentCategory;
                             $numbers = $items->slice(1);
     
                             return [
-                                'category' => $category,
+                                'category' => $refCategory,
                                 'sum' => $numbers->sum()
                             ];
                         }
@@ -74,5 +77,10 @@ class BudgetHelper
         
         
         return $result->implode("\n\n");
+    }
+
+    public function getAst(): array
+    {
+        return $this->_ast;
     }
 }

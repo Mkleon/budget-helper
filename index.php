@@ -1,8 +1,6 @@
 <?php
 namespace App\index;
 
-use App\Utils;
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\BudgetHelper;
@@ -11,14 +9,13 @@ use App\BudgetHelper;
 $text = <<<TEXT
 17,11
 Стрижка 300
-Одежда 2000
-Продукты 59
+Куртка 2000
+Торт 590
 
 18.11
 Хозтовары 440
 Продукты 700 131 42
-Работа 110
-Работа 200
+Работа 110 200
 Заработок 1000
 TEXT;
 
