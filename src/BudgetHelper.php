@@ -1,29 +1,16 @@
 <?php
 namespace App;
 
+use App\Utils;
+
 class BudgetHelper
 {
-    public static function clearArray(array $data, bool $deleteEmptyItems = true): array
-    {
-        // delete commas
-        $result = array_map(fn ($item) => str_replace(',', '.', $item), $data);
-        
-        // trim spaces
-        $result = array_map(fn ($item) => trim($item), $result);
-
-        if ($deleteEmptyItems) {
-            $result = array_values(array_filter($result, fn ($item) => !empty($item)));
-        }
-
-        return $result;
-    }
-
-    public static function composeAST(array $data)
+    public static function composeAST(array $data): array
     {
         $collection = collect($data);
         $byDays = $collection
             ->chunkWhile(fn ($value) => !empty($value))
-            ->map(fn ($item) => self::clearArray($item->toArray()))
+            ->map(fn ($item) => Utils::clearArray($item->toArray()))
             ->map(
                 function ($item) {
                     $oneDay = collect($item);
@@ -53,7 +40,7 @@ class BudgetHelper
         return $byDays->all();
     }
 
-    public static function createText(array $ast)
+    public static function createText(array $ast): string
     {
         $collection = collect($ast);
         $result = $collection

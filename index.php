@@ -1,6 +1,8 @@
 <?php
 namespace App\index;
 
+use App\Utils;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 
@@ -16,7 +18,7 @@ $data = <<<TEXT
 TEXT;
 
 $strings = explode("\n", trim($data, $characters = " \n\r\t\v\0"));
-$result = BudgetHelper::clearArray($strings, false);
+$result = Utils::clearArray($strings, false);
 $ast = BudgetHelper::composeAST($result);
 
 echo BudgetHelper::createText($ast);
