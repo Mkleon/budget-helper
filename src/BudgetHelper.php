@@ -5,12 +5,21 @@ use App\Utils;
 
 class BudgetHelper
 {
-    public static function composeAST(array $data): array
+    public static function buildAST(array $data): array
     {
         $collection = collect($data);
         $byDays = $collection
             ->chunkWhile(fn ($value) => !empty($value))
-            ->map(fn ($item) => Utils::clearArray($item->toArray()))
+            ->map(
+                function ($item) {
+                    $utils = new Utils($item->toArray());
+                    return $utils
+                        ->replaceCommasToChar()
+                        ->trimSpaces()
+                        ->deleteEmptyItems()
+                        ->toArray();
+                }
+            )
             ->map(
                 function ($item) {
                     $oneDay = collect($item);

@@ -3,18 +3,36 @@ namespace App;
 
 class Utils
 {
-    public static function clearArray(array $data, bool $deleteEmptyItems = true): array
+    private $_data = [];
+
+    public function __construct(array $data)
     {
-        // delete commas
-        $result = array_map(fn ($item) => str_replace(',', '.', $item), $data);
-        
-        // trim spaces
-        $result = array_map(fn ($item) => trim($item), $result);
+        $this->_data = collect($data);
+    }
 
-        if ($deleteEmptyItems) {
-            $result = array_values(array_filter($result, fn ($item) => !empty($item)));
-        }
+    public function replaceCommasToChar(string $character = ',')
+    {
+        $result = $this->_data->map(fn ($item) => str_replace($character, '.', $item));
 
-        return $result;
+        return new Utils($result->all());
+    }
+
+    public function trimSpaces()
+    {
+        $result = $this->_data->map(fn ($item) => trim($item));
+
+        return new Utils($result->all());
+    }
+
+    public function deleteEmptyItems()
+    {
+        $result = $this->_data->filter(fn ($item) => !empty($item));
+
+        return new Utils($result->all());
+    }
+
+    public function toArray()
+    {
+        return $this->_data->all();
     }
 }

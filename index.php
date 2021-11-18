@@ -9,17 +9,21 @@ require_once __DIR__ . '/vendor/autoload.php';
 use App\BudgetHelper;
 
 $data = <<<TEXT
-11.11
-Продукты 10 157 13
-Хозтовары 145
+17.11
+Стрижка 300
+Одежда 2000
+Продукты 59
 
-12.11
-Работа 50 48
+18.11
+Хозтовары 440
+Продукты 700 131 42
+Работа 110
+Работа 200
+Заработок 1000
 TEXT;
 
 $strings = explode("\n", trim($data, $characters = " \n\r\t\v\0"));
-$result = Utils::clearArray($strings, false);
-$ast = BudgetHelper::composeAST($result);
+$ast = BudgetHelper::buildAST($strings);
 
 echo BudgetHelper::createText($ast);
 
