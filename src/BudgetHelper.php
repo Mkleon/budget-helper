@@ -40,7 +40,8 @@ class BudgetHelper
                         function ($line) {
                             $items = collect(explode(' ', $line));
 
-                            $currentCategory = $items->first();
+                            $currentCategory = preg_match('/\^[\D]\*/', $line, $matches, PREG_OFFSET_CAPTURE);
+                            //$currentCategory = $items->first();
                             $refCategory = collect(Categories::findKeysByValue($currentCategory))->first() ?? $currentCategory;
                             $numbers = $items->slice(1);
     
