@@ -40,14 +40,31 @@ class BudgetHelper
                         function ($line) {
                             $items = collect(explode(' ', $line));
 
-                            $currentCategory = preg_match('/\^[\D]\*/', $line, $matches, PREG_OFFSET_CAPTURE);
-                            //$currentCategory = $items->first();
-                            $refCategory = collect(Categories::findKeysByValue($currentCategory))->first() ?? $currentCategory;
-                            $numbers = $items->slice(1);
+                            $separatedItems = $items->reduce(
+                                function ($acc, $value) {
+                                    if (is_numeric($value)) {
+                                        $acc['numbers'] = [...$acc['numbers'], $value];
+                                    } else {
+                                        $acc['words'] = [...$acc['words'], $value];
+                                    }
+
+                                    return $acc;
+                                },
+                                [
+                                    'words' => [],
+                                    'numbers' => []
+                                ]
+                            );
+
+                            ['words' => $words, 'numbers' => $numbers] = $separatedItems;
+                            $categoryName = collect($words)->implode(' ');
+                            $sum = collect($numbers)->sum();
+
+                            $refCategory = collect(Categories::findKeysByValue($categoryName))->first() ?? $categoryName;
     
                             return [
                                 'category' => $refCategory,
-                                'sum' => $numbers->sum()
+                                'sum' => $sum
                             ];
                         }
                     );
